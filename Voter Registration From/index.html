@@ -18,7 +18,7 @@
     <div class="container">
         <header>Registration Form</header>
 
-        <form action="VoterRegisteration.php" method="post">
+        <form action="VoterRegisteration.php" method="post" enctype="multipart/form-data">
             <div class="form first">
                 <div class="details personal">
                     <span class="title" style="color: green;">Personal Details</span>
@@ -56,7 +56,7 @@
 
                         <div class="input-field">
                             <label>Upload Your Image  <span style="color: red;">*</span></label>
-                            <input type="file" name="photo" required >
+                            <input type="file" name="photo">
                         </div>
                     </div>
                 </div>
@@ -77,17 +77,17 @@
 
                         <div class="input-field">
                             <label>Issued Date <span style="color: red;">*</span></label>
-                            <input type="date" placeholder="Enter your issued date" name="issued" required>
+                            <input type="date" placeholder="Enter your issued date" name="issue" required>
                         </div>
 
                         <div class="input-field">
                             <label>Expiry Date <span style="color: gray; font-size:10px;">(option)</span></label>
-                            <input type="date" placeholder="Enter expiry date" name="expire" >
+                            <input type="date" placeholder="Enter expiry date" name="expire">
                         </div>
 
                         <div class="input-field">
                             <label>Create Password  <span style="color: red;">*</span></label>
-                            <input type="password" placeholder="Create Password" name="pass" >
+                            <input type="password" placeholder="Create Password" name="pass">
                         </div>
 
                         <div class="input-field">

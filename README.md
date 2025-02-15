@@ -1,1 +1,0 @@
-# nepal-voting-system

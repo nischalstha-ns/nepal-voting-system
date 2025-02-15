@@ -1,72 +1,151 @@
 <?php
-$conn = mysqli_connect('localhost', 'root', '', 'votersdatabase');
+// Connect to the database
+$conn = mysqli_connect('localhost', 'root', 'your_password', 'voterdatabase');
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve form data
+    $name = $_POST['name'];
+    $dob = $_POST['dob'];
+    $email = $_POST['email'];
+    $mobile = $_POST['mobile'];
+    $gender = $_POST['gender'];
+    $image = $_FILES['photo']['name'];
+    $tmp_name = $_FILES['photo']['tmp_name'];
+    $idtype = $_POST['idtype'];
+    $cnic = $_POST['cnic'];
+    $issue = $_POST['issue'];
+    $expire = $_POST['expire'];
+    $pass = $_POST['pass'];
+    $cpass = $_POST['cpass'];
 
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Avoid undefined index errors
-    $name = isset($_POST['name']) ? $_POST['name'] : '';
-    $dob = isset($_POST['dob']) ? $_POST['dob'] : '';
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
-    $mobile = isset($_POST['mobile']) ? $_POST['mobile'] : '';
-    $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
-    $idtype = isset($_POST['idtype']) ? $_POST['idtype'] : '';
-    $cnic = isset($_POST['cnic']) ? $_POST['cnic'] : '';
-    $issue = isset($_POST['issue']) ? $_POST['issue'] : '';
-    $expire = isset($_POST['expire']) ? $_POST['expire'] : '';
-    $pass = isset($_POST['pass']) ? $_POST['pass'] : '';
-    $cpass = isset($_POST['cpass']) ? $_POST['cpass'] : '';
-
-    // Check if file is uploaded
-    if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
-        $image_name = $_FILES['photo']['name'];
-        $image_tmp = $_FILES['photo']['tmp_name'];
-        $image_folder = "../VoterImg/" . basename($image_name);
-    } else {
-        $image_name = "";
-        $image_tmp = "";
-        $image_folder = "";
-    }
-
-    // Check password match
+    // Check if passwords match
     if ($pass == $cpass) {
-        if (!empty($image_tmp) && move_uploaded_file($image_tmp, $image_folder)) {
-            // Secure password storage
-            $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
+        // Move the uploaded image to the specified directory
+        if (move_uploaded_file($tmp_name, "../VoterImage/$image")) {
+            // Insert the data into the database
+            $insert = mysqli_query($conn, "INSERT INTO VOTERREGISTRATION(name, dob, email, gender, photo, idtype, cnic, issue, expire, pass, cpass, status, votes) 
+                                          VALUES ('$name', '$dob', '$email', '$mobile', '$image', '$idtype', '$cnic', '$issue', '$expire', '$pass', '$cpass', 0, 0)");
 
-            $insert = mysqli_query($conn, "INSERT INTO VOTERSREGISTRATION 
-                (name, dob, email, mobile, gender, photo, idtype, cnic, issue, expire, pass, status, votes) 
-                VALUES ('$name', '$dob', '$email', '$mobile', '$gender', '$image_name', '$idtype', '$cnic', '$issue', '$expire', '$hashed_pass', 0, 0)");
-
-            if ($insert) {
-                echo '
-                <script>
-                    alert("Registration successful!");
-                    location="../Voter login Form/index.html";
-                </script>
-                ';
-            } else {
-                echo "Error: " . mysqli_error($conn);
-            }
-        } else {
             echo '
             <script>
-                alert("File upload failed.");
+            alert("Form submitted successfully!");
+            location="../Voter login Form/index.html";  
             </script>
             ';
+        } else {
+            echo '<script>alert("Error uploading the image!");</script>';
         }
     } else {
         echo '
         <script>
-            alert("Passwords do not match. Please try again.");
+        alert("Password and Confirm password do not match!");
         </script>
         ';
     }
 }
-
-mysqli_close($conn);
 ?>
+
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <title>Responsive Registration Form</title> 
+</head>
+<body>
+    <div class="container">
+        <header>Registration Form</header>
+
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="form first">
+                <div class="details personal">
+                    <span class="title" style="color: green;">Personal Details</span>
+
+                    <div class="fields">
+                        <div class="input-field">
+                            <label>Full Name <span style="color: red;">*</span></label>
+                            <input type="text" placeholder="Enter your name" name="name" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Date of Birth <span style="color: red;">*</span></label>
+                            <input type="date" placeholder="Enter birth date" name="dob" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Email <span style="color: gray; font-size:10px;">(optional)</span></label>
+                            <input type="text" placeholder="Enter your email" name="email">
+                        </div>
+
+                        <div class="input-field">
+                            <label>Mobile Number <span style="color: red;">*</span></label>
+                            <input type="number" placeholder="Enter mobile number" name="mobile" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Gender <span style="color: red;">*</span></label>
+                            <select required name="gender">
+                                <option disabled selected>Select gender</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Others</option>
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Upload Your Image  <span style="color: red;">*</span></label>
+                            <input type="file" name="photo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details ID">
+                    <span class="title" style="color: green;">Identity Details</span>
+
+                    <div class="fields">
+                        <div class="input-field">
+                            <label>ID Type <span style="color: gray; font-size:10px;">(optional)</span></label>
+                            <input type="text" placeholder="Enter ID type" name="idtype">
+                        </div>
+
+                        <div class="input-field">
+                            <label>Cnic Number <span style="color: red;">*</span></label>
+                            <input type="number" placeholder="Enter ID number" name="cnic" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Issued Date <span style="color: red;">*</span></label>
+                            <input type="date" placeholder="Enter your issued date" name="issue" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Expiry Date <span style="color: gray; font-size:10px;">(optional)</span></label>
+                            <input type="date" placeholder="Enter expiry date" name="expire">
+                        </div>
+
+                        <div class="input-field">
+                            <label>Create Password  <span style="color: red;">*</span></label>
+                            <input type="password" placeholder="Create Password" name="pass" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Confirm Password <span style="color: red;">*</span></label>
+                            <input type="password" placeholder="Confirm Password" name="cpass" required>
+                        </div>
+                    </div>
+
+                    <button class="submit" type="submit">
+                        <span class="btnText">Submit</span>
+                        <i class="uil uil-navigator"></i>
+                    </button>
+                </div> 
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
