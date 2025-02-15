@@ -1,3 +1,12 @@
+<!-- <?php
+
+session_start();
+$voterdata=$_SESSION[];
+
+
+?> -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +25,9 @@
             background: red;
             boarder-radius: 7px;
         }
+        #main-section{
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+        }
  
 
     </style>
@@ -26,9 +38,41 @@
 
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" width: 100% id="rightMenu">
   <button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
-  <a href="#" class="w3-bar-item w3-button">Link 1</a>
-  <a href="#" class="w3-bar-item w3-button">Link 2</a>
-  <a href="#" class="w3-bar-item w3-button">Link 3</a>
+   <div class="container" style="padding: top 50px;">
+      <div class="row">
+        <div class="col-sm-4">
+            
+        </div>
+        <div class="col-sm-6">
+            <h2> Admin Login form</h2><br>
+            <p>Please enter your information to proceed</p> <hr><br><br>
+
+        <form>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Name</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1">
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+  <div class="d-grid gap-2 d-md-block">
+  <button class="btn btn-primary" type="button">Login</button>
+</div>
+</form>
+
+        </div>
+      </div>
+
+  
+
+   </div>
+
 </div>
 
 
@@ -76,13 +120,18 @@
          </div>
   <div class="row g-0">
     <div class="col-md-4">
-      <img src="..." class="img-fluid rounded-start" alt="...">
+      <img src="../VoterImg/" <?php echo $voterdata['photo'] ?> class="img-fluid rounded-start" alt="...">
     </div>
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title" style="color:blue; ">Voter details</h5>
-        <p class="card-text">Name:</p>
-        <h5 class="card-title">Status</h5>
+        <p class="card-text">
+            <li>Name:<?php echo $voterdata['name'] ?></li>
+            <li>Mobile NO.:<?php echo $voterdata['mobile'] ?></li>
+            <li>Cnic:<?php echo $voterdata['cnic'] ?></li>
+            
+        </p>
+        <h5 class="card-title">Status: <span style="color: green">Not Voted</span></h5>
       </div>
     </div>
   </div>
@@ -91,7 +140,7 @@
 
         </div>
         <div class="col-sm-8">
-        <table class="table">
+        <table class="table" id="main-section">
   <thead>
     <tr>
       <th scope="col">#</th>
